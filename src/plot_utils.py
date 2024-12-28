@@ -39,10 +39,10 @@ def plot_ecdf_geral(df: pd.DataFrame, col: str):
     plt.xlabel(col)
     plt.show()
 
-def plot_multiple_ecdf(df: pd.DataFrame, plotting_var, hue_var):
+def plot_multiple_ecdf(df: pd.DataFrame, plotting_var, hue_var, title: str):
     plt.figure(figsize=(16,12))
     sns.ecdfplot(data=df, x=plotting_var, hue=hue_var,linewidth=2.5)
-    plt.title(f'ECDF do valor da compra quebrando por turnos')
+    plt.title(title)
     
 
 def plot_box_plot(df: pd.DataFrame, col: str):
@@ -137,4 +137,36 @@ def plot_everyday_sells(df: pd.DataFrame, y, stringer):
     plt.xticks(rotation=90)
 
     plt.axhline(y=average_valor, color='red', linestyle='--', label=f'Média ({average_valor:.2f})')
+    plt.show()
+
+def plot_count_shift_hue(df: pd.DataFrame, hue, title: str):
+    plt.figure(figsize=(12,8))
+    sns.countplot(data=df, x='shift', palette='crest', hue=hue)
+    plt.title(title)
+    plt.xlabel('Turnos')
+    plt.ylabel('Contagem')
+    plt.show()
+
+def corrplot(df: pd.DataFrame) -> None:
+    """Plota a correlação de Spearman das variáveis de um DataFrame
+    """
+    correlation_matrix = df.corr(method='spearman')
+
+    plt.figure(figsize=(22, 16))
+    # Criei uns filtros adicionais para embelezar
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
+    plt.title('Correlação de Spearman')
+    plt.show()
+
+def plot_shift(df: pd.DataFrame, col, hue):
+    fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(18, 8))
+    axes = axes.flatten()
+
+    for i in range(0,4):
+        sns.ecdfplot(x=col, hue=hue, ax=axes[i],data=df[df['shift'] == i+1], linewidth=2.5)
+        axes[i].set_title(f'Histogram {col} para shift {i+1}') 
+        axes[i].set_xlabel('') 
+        axes[i].set_ylabel('Frequency') 
+
+    plt.tight_layout()
     plt.show()

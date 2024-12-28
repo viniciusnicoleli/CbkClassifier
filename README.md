@@ -45,25 +45,31 @@ Identificando transações que possam se tornar chargeback.
 
 - Qual o perfil das transações que retornam chargeback?
     # Observar olhando CBK 1/0
-    * Observar o shift da operação
-    * Observar o dia da semana + shift da operação
-    * Observar o numero da semana
-    * Observar o valor da transação e o shift
-    * Observar o valor da transação, o dia da semana e o shift
+    * Observar o shift da operação [DONE]
+    * Observar o dia da semana + shift da operação [DONE]
+    * Observar o numero da semana [DONE]
+    * Observar o valor da transação e o shift [DONE]
+    * Observar o valor da transação, o dia da semana e o shift [JUMPED]
+    * Observar clientes com preferência de compra em turno X comprando em outro turno [JUMPED]
+    * Observar clientes que geralmente adquirem em um dia da semana mas comprando em outro [JUMPED]
+    * Observar tempo médio de reaquisição do produto quando n é CBK e fazer a prop [JUMPED] [DONE]
+    * Observar clientes que tiveram mais de 2 operações nos ultimos 2 minutos / 5 minutos / 10 minutos [JUMPED] [DONE]
+    * Observar valor médio/mediana dos ultimos X dias de aquisição pelo cliente e a distribuição na proporção que eram CBK [JUMPED] [DONE]
+    * Observar a qtde de CBKs nos ultimos X dias [DONE]
+    * Se é VISA ou MasterCard
+    * Correlação spearman com CBK [DONE]
 
-    # Clientes preferencialmente noturnos ou etc
+- Features [DONE]
 
-- Features
+* Perfil Cbk geral [DONE]
+    * Dia, hora refletindo o valor [DONE]
+    * Numero da semana, dia, hora refletindo o valor [DONE]
 
-* Perfil Cbk geral
-    * Dia, hora refletindo o valor
-    * Numero da semana, dia, hora refletindo o valor
-
-* Perfil cliente/NumeroCartao baseado em X dias
-    * Qtd de CBKs
-    * Ticket médio/mediana de CBKs
-    * Shift médio que acontece os CBKs
-    * Que dia da semana e shift mais acontece CBKs
+* Perfil cliente/NumeroCartao baseado em X dias [DONE]
+    * Qtd de CBKs [DONE]
+    * Ticket médio/mediana de CBKs [DONE]
+    * Shift médio que acontece os CBKs [DONE]
+    * Que dia da semana e shift mais acontece CBKs [DONE]
 
 
 
@@ -71,3 +77,29 @@ Identificando transações que possam se tornar chargeback.
 - Identificar a bandeira do cartão
 4: VISA
 5: MasterCardElo
+
+400217******7711
+400217******8714
+400225******8836
+
+Com tudo de operações [Qtd de operações nos X minutos] [DONE] [D]
+Qtd de CBKs [30 dias] [DONE] [D]
+Tempo medio de compra total [30 dias] [DONE] [D]
+Tempo geral da ultima compra [Tudo] [DONE] [D]
+Valor somado dos ultimos 3 dias [DONE]  [D]
+Valor medio dos ultimos 3 dias [DONE] [D]
+Qtd de operações totais [D]
+
+Qtd de compra por semana [Sem rolling]
+Qtd de compra por dia [Sem rolling]
+
+# Features selecionadas
+> mean_days_operations_customer_cbk
+> last_two_minutes_cbk_ops
+> last_days_cbk
+> last_five_minutes_cbk_ops
+> last_two_minutes_cbk_all_ops
+> last_five_minutes_cbk_all_ops
+> last_purchase_time
+
+> É o primeiro pagamento? [JUMPED]
