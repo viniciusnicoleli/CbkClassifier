@@ -373,7 +373,9 @@ def calculate_simple_gains(df: pd.DataFrame):
     qtd_total = df[(df['y_true'] == 1) & (df['assign'].isin([0,1]))]['Valor'].shape[0]
 
     valor_erroneamente_predito = df[(df['y_true'] == 0) & (df['y_pred'] == 1)]['Valor'].sum()
+    valor_erroneamente_predito_cbk = df[(df['y_true'] == 1) & (df['y_pred'] == 0)]['Valor'].sum()
     qtd_erroneamente_predito = df[(df['y_true'] == 0) & (df['y_pred'] == 1)]['Valor'].shape[0]
+    qtd_erroneamente_predito_cbk = df[(df['y_true'] == 1) & (df['y_pred'] == 0)]['Valor'].shape[0]
 
     print('####################################### RESULTADOS POSITIVOS #####################################')
     print(f'Valor que o modelo identificou: {valor_recuperado}')
@@ -384,6 +386,8 @@ def calculate_simple_gains(df: pd.DataFrame):
     print('')
     print('')
     print('####################################### RESULTDOS NEGATIVOS ######################################')
-    print(f'Valor que o modelo determinou erroneamente {valor_erroneamente_predito}')
-    print(f'Qtd de casos em que o modelo determinou erroneamente {qtd_erroneamente_predito}')
+    print(f'Valor que o modelo determinou erroneamente como CBK {valor_erroneamente_predito}')
+    print(f'Valor que o modelo determinou erroneamente que não era CBK {valor_erroneamente_predito_cbk}')
+    print(f'Qtd de casos em que o modelo determinou erroneamente como CBK {qtd_erroneamente_predito}')
+    print(f'Qtd de casos em que o modelo determinou erroneamente que não era CBK {qtd_erroneamente_predito_cbk}')
     print('##################################################################################################')
