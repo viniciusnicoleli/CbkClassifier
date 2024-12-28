@@ -94,12 +94,35 @@ Qtd de compra por semana [Sem rolling]
 Qtd de compra por dia [Sem rolling]
 
 # Features selecionadas
-> mean_days_operations_customer_cbk
-> last_two_minutes_cbk_ops
-> last_days_cbk
-> last_five_minutes_cbk_ops
-> last_two_minutes_cbk_all_ops
-> last_five_minutes_cbk_all_ops
-> last_purchase_time
+> mean_days_operations_customer_cbk [DONE]
+> last_two_minutes_cbk_ops [DONE]
+> last_days_cbk [DONE]
+> last_five_minutes_cbk_ops [DONE]
+> last_two_minutes_cbk_all_ops [DONE]
+> last_five_minutes_cbk_all_ops [DONE]
+> last_purchase_time [DONE]
 
-> É o primeiro pagamento? [JUMPED]
+> É o primeiro pagamento? [DONE]
+> Tempo da ultima compra em segundos [DONE]
+> Tempo da segunda ultima compra em segundos [JUMPED]
+> Tempo da terceira ultima compra em segundos [JUMPED]
+> O valor da ultima compra é identico a da atual? [DONE]
+
+# Modelagem
+
+> Checar badrate [DONE]
+> Checar nulos [DONE]
+> Checar ECDF das variáveis nos splits [DONE]
+> Pipeline [DONE]
+> Construção do modelo [DONE]
+> Resultados
+    PR-auc [Done]
+    ROC-auc [Done]
+    Distribuição scores [Done]
+    Plotar a arvore [Done]
+    feature_importance [Done]
+    tabela dos valores dos scores [Done]
+        Calcular os ganhos baseado no corte do score [Done]
+
+> Possiveis evoluções
+

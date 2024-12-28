@@ -109,15 +109,20 @@ class BuildFeatures:
                                                     cbk='Sim',
                                                     time_seconds=300),axis=1)   
 
-        self.df['last_two_minutes_cbk_all_ops'] = self.df.apply(lambda x: self.get_days_all_operations(
+        self.df['last_two_minutes_all_ops'] = self.df.apply(lambda x: self.get_days_all_operations(
                                                     id_query=x['Cartão'],
                                                     dia_hora=x['dia_hora'],
                                                     time_seconds=120),axis=1)
 
-        self.df['last_five_minutes_cbk_all_ops'] = self.df.apply(lambda x: self.get_days_all_operations(
+        self.df['last_five_minutes_all_ops'] = self.df.apply(lambda x: self.get_days_all_operations(
                                                     id_query=x['Cartão'],
                                                     dia_hora=x['dia_hora'],
                                                     time_seconds=300),axis=1)   
+        
+        self.df['last_eight_minutes_all_ops'] = self.df.apply(lambda x: self.get_days_all_operations(
+                                                    id_query=x['Cartão'],
+                                                    dia_hora=x['dia_hora'],
+                                                    time_seconds=480),axis=1)         
 
         self.df['qtd_cbk_operations_15d'] = self.df.apply(lambda x: self.get_qtd_cbk_days(
                                                     id_query=x['Cartão'],
@@ -145,7 +150,29 @@ class BuildFeatures:
                                                     days=15,
                                                     type='sum'),axis=1)  
         
-        self.df['last_purchase_time'] = self.df.apply(lambda x: x['last_day_no_cbk'] if x['last_day_no_cbk'] <= x['last_day_cbk'] else x['last_day_cbk'], axis=1)
+        self.df['last_purchase_time_between'] = self.df.apply(lambda x: x['last_day_no_cbk'] if x['last_day_no_cbk'] <= x['last_day_cbk'] else x['last_day_cbk'], axis=1)
+
+
+        # Variáveis adicionadas posteriormente
+        self.df['is_first_payment'] = self.df.apply(lambda x: self.is_first_payment(
+                                        id_query=x['Cartão'],
+                                        dia_hora=x['dia_hora']),axis=1)
+        
+        self.df['last_purchase_in_seconds_all_ops'] = self.df.apply(lambda x: self.get_last_purchase_seconds(
+                                        id_query=x['Cartão'],
+                                        dia_hora=x['dia_hora']),axis=1)  
+
+        self.df['is_last_payment_equal'] = self.df.apply(lambda x: self.is_last_payment_equal(
+                                        id_query=x['Cartão'],
+                                        dia_hora=x['dia_hora'],
+                                        payment=x['Valor']),axis=1)      
+
+        self.df['mean_shift_customer_no_cbk'].fillna(-1, inplace=True)
+        self.df['mean_shift_customer_cbk'].fillna(-1, inplace=True)
+        self.df['mean_weekday_num_customer_no_cbk'].fillna(-1, inplace=True)
+        self.df['mean_weekday_num_customer_cbk'].fillna(-1, inplace=True)
+        self.df['mean_revenue_all_operations_15d'].fillna(-1, inplace=True)
+        self.df['last_purchase_time_between'].fillna(-1, inplace=True)
 
     def get_basic_statistics_customer(self, id_query: str, dia_hora: datetime, col: str, cbk):
         df_check = self.df[
@@ -244,6 +271,37 @@ class BuildFeatures:
                 return df_check[df_check['diff_time'] <= days]['Valor'].sum()
             else:
                 return df_check[df_check['diff_time'] <= days]['Valor'].mean()
+        else:
+            return -1
+
+    def is_first_payment(self, id_query: str, dia_hora):
+        df_check = self.df[
+            (self.df['Cartão'] == id_query) & 
+            (self.df['dia_hora'] < dia_hora)
+        ]
+        if df_check.empty:
+            return 1
+        else:
+            return 0
+        
+    def get_last_purchase_seconds(self, id_query: str, dia_hora):
+        df_check = self.df[
+            (self.df['Cartão'] == id_query) & 
+            (self.df['dia_hora'] < dia_hora)
+        ]
+        if not df_check.empty:
+            return (dia_hora - df_check['dia_hora'].max()).total_seconds()
+        else:
+            return -1
+        
+    def is_last_payment_equal(self, id_query: str, dia_hora, payment):
+        df_check = self.df[
+            (self.df['Cartão'] == id_query) & 
+            (self.df['dia_hora'] < dia_hora)
+        ]
+        if not df_check.empty:
+            valor_ultima_compra = df_check.sort_values(by='dia_hora').iloc[-1]['Valor']
+            return 1 if valor_ultima_compra == payment else 0
         else:
             return -1
         

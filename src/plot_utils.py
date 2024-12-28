@@ -170,3 +170,45 @@ def plot_shift(df: pd.DataFrame, col, hue):
 
     plt.tight_layout()
     plt.show()
+
+def plot_badrate(df: pd.DataFrame):
+    df_plot = df.groupby(['week_number_month']).agg(
+        cbk_per_week=('CBK', 'sum'),
+        count_per_week=('CBK', 'count')
+    ).reset_index()
+    df_plot['Badrate'] = df_plot['cbk_per_week'] / df_plot['count_per_week']
+
+    plt.figure(figsize=(12, 8))
+    ax = sns.barplot(data=df_plot, x='week_number_month', y='Badrate', color='grey', label='Badrate')
+
+    ax2 = ax.twinx()
+    sns.lineplot(data=df_plot, x='week_number_month', y='count_per_week', color='red', marker='o', label='Count per Week', ax=ax2)
+
+    ax.set_title('Badrate and Count per Week', fontsize=16)
+    ax.set_xlabel('Week Number of Month', fontsize=12)
+    ax.set_ylabel('Badrate', fontsize=12, color='grey')
+    ax2.set_ylabel('Count per Week', fontsize=12, color='red')
+
+    lines, labels = ax.get_legend_handles_labels()
+    ax.legend(lines, labels, loc='upper right', fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+    return df_plot
+
+def plotar_ecdf_split(df: pd.DataFrame) -> None:
+    """Função que plota gráficos de distribuição
+    em uma única célula
+    """  
+    fig, axes = plt.subplots(nrows=5, ncols=3, figsize=(22, 16))
+    axes = axes.flatten()
+
+    for i, column in enumerate(df.columns):
+        sns.ecdfplot(data=df, y=column, hue='label', ax=axes[i])
+        
+        axes[i].set_title(f'{column}') 
+        axes[i].set_xlabel('') 
+        axes[i].set_ylabel('Frequency') 
+        
+    plt.tight_layout()
+    plt.show()
